@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity
 } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { TextInput , Button} from 'react-native-paper';
 import firebase from '../../services/connectinFirebase';
 
 export default function Login({changeStatus}) {
@@ -41,8 +41,8 @@ export default function Login({changeStatus}) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/usuario.png')}
-        style={{ width: 350, height: 350, marginLeft: 35 }}></Image>
+      <Image source={require('../../assets/Usuario.png')}
+        style={{ width: 350, height: 350, marginLeft: 25 }}></Image>
       <SafeAreaView>
         <TextInput
           label="Email"
@@ -62,12 +62,14 @@ export default function Login({changeStatus}) {
       </SafeAreaView>
       <TouchableOpacity
         style={[styles.handleLogin,
-        { backgroundColor: type === 'login' ? '#4682B4' : '#141414' }]}
+        { backgroundColor: type === 'login' ? '#C2CFFD' : '#8B9EE0' }]}
         onPress={'handleLogin'}
       >
+        <Button mode="contained-tonal" onPress={() => console.log('Pressed')}>
         <Text style={styles.loginText}>
           {type === 'login' ? 'Acessar' : 'Cadastrar'}
         </Text>
+        </Button>
       </TouchableOpacity>
 
 
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     width: 320,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#141414'
+    borderColor: '#8B9EE0'
   },
 
 
