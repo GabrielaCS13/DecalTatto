@@ -63,13 +63,13 @@ export default function Login({changeStatus}) {
       <TouchableOpacity
         style={[styles.handleLogin,
         { backgroundColor: type === 'login' ? '#C2CFFD' : '#8B9EE0' }]}
-        onPress={'handleLogin'}
+        onPress={handleLogin}
       >
-        <Button mode="contained-tonal" onPress={() => console.log('Pressed')}>
+
         <Text style={styles.loginText}>
           {type === 'login' ? 'Acessar' : 'Cadastrar'}
         </Text>
-        </Button>
+
       </TouchableOpacity>
 
 
@@ -96,6 +96,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#8B9EE0'
   },
+  
+  handleLogin:{ 
+    alignItems: 'center', 
+    justifyContent:'center', 
 
+    height: 45, 
+
+    marginTop:30, 
+
+  }, 
+
+  loginText:{ 
+
+    color: '#FFF', 
+
+    fontSize: 24, 
+
+  }, 
 
 });
