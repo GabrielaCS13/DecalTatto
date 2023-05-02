@@ -24,7 +24,11 @@ function ListScreen() {
 
 
 function PostScreen() {
-    return <Produtos />
+    return (
+        <View style={styles.container}>
+            <Text></Text>
+        </View>
+    );
 }
 
 
@@ -53,14 +57,14 @@ export default function Menu() {
                             case 'Listar':
                                 iconName = 'list';
                                 break;
-                            case 'Tatuagens':
-                                iconName = 'tint';
+                            case 'Tatoo':
+                                iconName = 'feather';
                                 break;
                             case 'Ler API':
                                 iconName = 'bell';
                                 break;
                             default:
-                                iconName = 'add-circle-outline';
+                                iconName = 'anchor';
                                 break;
                         }
 
