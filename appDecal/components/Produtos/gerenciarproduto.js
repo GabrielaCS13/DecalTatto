@@ -9,16 +9,24 @@ import {
 } from 'react-native'; 
 
 import { TextInput } from 'react-native-paper'; 
-export default function GerenciarProdutos() {  
-    const [name, setNome] = useState(''); 
 
-    const [brand, setTamanho] = useState(''); 
   
-    const [price, setDescricao] = useState(''); 
+
+export default function GerenciarProdutos() { 
+
   
-    const [color, setMetodopagamaneto] = useState(''); 
+
+    const [nome, setNome] = useState('');  
+
+    const [marca, setMarca] = useState('');  
+
+    const [valor, setValor] = useState('');  
+
+    const [cor, setCor] = useState('');  
+
+    const [key, setKey] = useState('');  
+
   
-    const [key, setKey] = useState(''); 
 
     return ( 
 
@@ -26,7 +34,7 @@ export default function GerenciarProdutos() {
 
             <TextInput 
 
-                placeholder='Nome' 
+                placeholder='Produto' 
 
                 left={<TextInput.Icon icon="car" />} 
 
@@ -34,7 +42,7 @@ export default function GerenciarProdutos() {
 
                 style={styles.input} 
 
-                onChangeText={(texto) => setNome(texto)} 
+                onChangeText={(text) => setNome(text)} 
 
                 value={nome} 
 
@@ -42,43 +50,43 @@ export default function GerenciarProdutos() {
 
             <TextInput 
 
-                placeholder='Tamanho' 
+                placeholder='Marca' 
 
                 left={<TextInput.Icon icon="sale" />} 
 
                 style={styles.input} 
 
-                onChangeText={(texto) => setTamanho(texto)} 
+                onChangeText={(text) => setMarca(text)} 
 
-                value={brand} 
+                value={marca} 
 
             /> 
 
             <TextInput 
 
-                placeholder='Descricao' 
+                placeholder='Preço (R$)' 
 
                 left={<TextInput.Icon icon="sack" />} 
 
                 style={styles.input} 
 
-                onChangeText={(texto) => setDescricao(texto)} 
+                onChangeText={(text) => setValor(text)} 
 
-                value={price} 
+                value={valor} 
 
             /> 
 
             <TextInput 
 
-                placeholder='Metodopagamaneto' 
+                placeholder='Cor' 
 
                 left={<TextInput.Icon icon="color" />} 
 
                 style={styles.input} 
 
-                onChangeText={(texto) => setMetodopagamaneto(texto)} 
+                onChangeText={(text) => setCor(text)} 
 
-                value={color} 
+                value={cor} 
 
             />                  
 
@@ -88,5 +96,100 @@ export default function GerenciarProdutos() {
 
 } 
 
- 
-}
+  
+
+const styles = StyleSheet.create({ 
+
+    container: { 
+
+        flex: 1, 
+
+        margin: 10, 
+
+    }, 
+
+    input: { 
+
+        borderWidth: 1, 
+
+        borderColor: '#121212', 
+
+        height: 40, 
+
+        fontSize: 13, 
+
+        borderRadius: 8 
+
+    }, 
+
+    separator: { 
+
+        marginVertical: 5, 
+
+    }, 
+
+    button: { 
+
+        flexDirection: 'row', 
+
+        alignItems: 'center', 
+
+        backgroundColor: '#3ea6f2', 
+
+        borderWidth: 0.5, 
+
+        borderColor: '#fff', 
+
+        height: 40, 
+
+        borderRadius: 5, 
+
+        margin: 5, 
+
+    }, 
+
+    buttonImageIconStyle: { 
+
+        padding: 10, 
+
+        margin: 5, 
+
+        height: 25, 
+
+        width: 25, 
+
+        resizeMode: 'stretch', 
+
+    }, 
+
+    buttonTextStyle: { 
+
+        color: '#fff', 
+
+        marginBottom: 4, 
+
+        marginLeft: 100, 
+
+        fontSize: 20 
+
+    }, 
+
+    buttonIconSeparatorStyle: { 
+
+        backgroundColor: '#fff', 
+
+        width: 1, 
+
+        height: 20, 
+
+    }, 
+
+    listar: { 
+
+        fontSize: 20, 
+
+        textAlign: 'center' 
+
+    } 
+
+}); 

@@ -3,6 +3,7 @@ import { View, StyleSheet, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import GerenciarProdutos from '../../components/Produtos/gerenciarproduto'; 
 
  
 
@@ -23,14 +24,9 @@ function ListScreen() {
 }
 
 
-function PostScreen() {
-    return (
-        <View style={styles.container}>
-            <Text></Text>
-        </View>
-    );
-}
-
+function ProdutosScreen() { 
+return <GerenciarProdutos/> 
+} 
 
 function NotificationsScreen() {
     return (
@@ -81,7 +77,7 @@ export default function Menu() {
                 <Tab.Screen name="Listar" component={ListScreen} />
                 <Tab.Screen
                     name="Tatoo"
-                    component={PostScreen}
+                    component={ProdutosScreen}
                 />
                 <Tab.Screen name="Ler API" component={NotificationsScreen} />
                 </Tab.Navigator>
