@@ -9,7 +9,7 @@ import {
 } from 'react-native'; 
 
 import { TextInput } from 'react-native-paper'; 
-import firebase from
+import firebase from '../../services/connectinFirebase';
 
   
 const Separator = () => { 
