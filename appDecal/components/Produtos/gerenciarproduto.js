@@ -1,278 +1,368 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 
-import { 
-
+import {
     View, Text, StyleSheet, Button,
+    TouchableOpacity, Keyboard, FlatList, ActivityIndicator
+} from 'react-native';
 
-    TouchableOpacity, Keyboard, FlatList, ActivityIndicator 
-
-} from 'react-native'; 
-
-import { TextInput } from 'react-native-paper'; 
+import { TextInput } from 'react-native-paper';
 import firebase from '../../services/connectinFirebase';
+import Listagem from './listagem';
 
-  
-const Separator = () => { 
+const Separator = () => {
+    return <View style={styles.separator} />;
+}
 
-    return <View style={styles.separator} />; 
+export default function GerenciarProdutos() {
 
-} 
+    const [nome, setNome] = useState('');
+    const [marca, setMarca] = useState('');
+    const [preco, setPreco] = useState('');
+    const [cor, setCor] = useState('');
+    const [key, setKey] = useState('');
+    const [produtos, setProdutos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const inputRef = useRef(null);
 
-export default function GerenciarProdutos() { 
+    useEffect(() => {
 
-  
+        async function search() {
 
-    const [nome, setNome] = useState('');  
+            await firebase.database().ref('produtos').on('value', (snapshot) => {
+                setProdutos([]);
 
-    const [marca, setMarca] = useState('');  
+                snapshot.forEach((chilItem) => {
+                    let data = {
 
-    const [valor, setPreco] = useState('');  
+                        //de acordo com a chave de cada item busca os valores 
 
-    const [cor, setCor] = useState('');  
+                        //cadastrados na relação e atribui nos dados 
 
-    const [key, setKey] = useState('');  
+                        key: chilItem.key,
+                        nome: chilItem.val().nome,
+                        marca: chilItem.val().marca,
+                        preco: chilItem.val().preco,
+                        cor: chilItem.val().cor,
+                    };
+
+                    setProdutos(oldArray => [...oldArray, data].reverse());
+                })
+                setLoading(false);
+            })
+        }
+
+        search();
+
+    }, []);
 
     //implementação dos métodos update ou insert 
 
-  async function insertUpdate() { 
+    async function insertUpdate() {
 
-    //editar dados 
+        //editar dados 
 
-    if (nome !== '' & marca !== '' & preco !== '' & cor !== '' & key !== '') { 
+        if (nome !== '' & marca !== '' & preco !== '' & cor !== '' & key !== '') {
 
-      firebase.database().ref('produtos').child(key).update({ 
+            firebase.database().ref('produtos').child(key).update({
+                nome: nome, marca: marca, preco: preco, cor: cor
+            })
 
-        nome: nome, marca: marca, preco: preco, cor: cor 
+            Keyboard.dismiss();
+            alert('Produto Editado!');
+            clearFields();
+            setKey('');
+            return;
+        }
 
-      }) 
+        //cadastrar dados 
 
-      Keyboard.dismiss(); 
+        let produtos = await firebase.database().ref('produtos');
 
-      alert('Produto Editado!'); 
+        let chave = produtos.push().key; //comando para salvar é o push 
 
-      clearFields(); 
 
-      setKey(''); 
 
-      return; 
+        produtos.child(chave).set({
 
-    } 
+            nome: nome,
+            marca: marca,
+            preco: preco,
+            cor: cor
 
-    //cadastrar dados 
 
-    let produtos = await firebase.database().ref('produtos'); 
+        });
 
-    let chave = produtos.push().key; //comando para salvar é o push 
+        Keyboard.dismiss();
 
-  
+        alert('Produto Cadastrado!');
 
-    produtos.child(chave).set({ 
+        clearFields();
 
-      nome: nome, 
+    }
 
-      marca: marca, 
+    function clearFields() {
+        setNome('');
+        setMarca('');
+        setPreco('');
+        setCor('');
+    }
 
-      preco: preco,
+    function handleDelete(key) { 
 
-      cor: imagem
+     
 
+        firebase.database().ref('produtos').child(key).remove() 
+    
+          .then(() => { 
+    
+            //todos os itens que forem diferentes daquele que foi deletado 
+    
+            //serão atribuidos no array 
+    
+            const findProdutos = produtos.filter(item => item.key !== key) 
+    
+            setProdutos(findProdutos) 
+    
+          }) 
+    
+      } 
+    
+      
+    
+      //função para editar  
+    
+      function handleEdit(data) { 
+    
+          setKey(data.key), 
+          setNome(data.nome), 
+          setMarca(data.marca), 
+          setPreco(data.preco), 
+          setCor(data.cor) 
+      } 
+     
 
-    }); 
+    return (
 
-    Keyboard.dismiss(); 
+        <View style={styles.container}>
 
-    alert('Produto Cadastrado!'); 
+            <TextInput
 
-    clearFields(); 
+                placeholder='Produto'
 
-  } 
+                left={<TextInput.Icon icon="car" />}
 
-  function clearFields () {
-    setNome('');
-    setMarca('');
-    setPreco('');
-    setCor('');
-  }
+                maxLength={40}
 
-  
+                style={styles.input}
 
-    return ( 
+                onChangeText={(text) => setNome(text)}
 
-        <View style={styles.container}> 
+                value={nome}
 
-            <TextInput 
+                ref={inputRef} 
 
-                placeholder='Produto' 
+            />
 
-                left={<TextInput.Icon icon="car" />} 
+            <TextInput
 
-                maxLength={40} 
+                placeholder='Marca'
 
-                style={styles.input} 
+                left={<TextInput.Icon icon="sale" />}
 
-                onChangeText={(text) => setNome(text)} 
+                style={styles.input}
 
-                value={nome} 
+                onChangeText={(text) => setMarca(text)}
 
-            /> 
+                value={marca}
 
-            <TextInput 
+                ref={inputRef} 
 
-                placeholder='Marca' 
+            />
 
-                left={<TextInput.Icon icon="sale" />} 
+            <TextInput
 
-                style={styles.input} 
+                placeholder='Preço (R$)'
 
-                onChangeText={(text) => setMarca(text)} 
+                left={<TextInput.Icon icon="sack" />}
 
-                value={marca} 
+                style={styles.input}
 
-            /> 
+                onChangeText={(text) => setPreco(text)}
 
-            <TextInput 
+                value={preco}
 
-                placeholder='Preço (R$)' 
+                ref={inputRef} 
 
-                left={<TextInput.Icon icon="sack" />} 
+            />
 
-                style={styles.input} 
+            <TextInput
 
-                onChangeText={(text) => setPreco(text)} 
+                placeholder='Cor'
 
-                value={valor} 
+                left={<TextInput.Icon icon="invert-colors" />}
 
-            /> 
+                style={styles.input}
 
-            <TextInput 
+                onChangeText={(text) => setCor(text)}
 
-                placeholder='Cor' 
+                value={cor}
 
-                left={<TextInput.Icon icon="invert-colors" />} 
+                ref={inputRef} 
 
-                style={styles.input} 
+            />
 
-                onChangeText={(text) => setCor(text)} 
+            <View style={styles.button}>
 
-                value={cor} 
+                <Button
 
-            />      
-           
-            <View style={styles.button}> 
+                    onPress={insertUpdate}
 
-        <Button 
+                    title="Adicionar"
 
-          onPress={insertUpdate} 
+                    color="#080"
 
-          title="Adicionar" 
+                    accessibilityLabel=""
 
-          color="#080" 
+                />
+            </View>
 
-          accessibilityLabel="" 
+            <View> 
 
-        />
-  </View>             
+<Text style={styles.listar}>Listagem de Produtos</Text> 
 
-        </View> 
+</View> 
 
-    ); 
+
+{loading ? 
+
+( 
+
+    <ActivityIndicator color="#121212" size={45} /> 
+
+) : 
+
+( 
+
+    <FlatList 
+
+        keyExtractor={item => item.key} 
+
+        data={produtos} 
+
+        renderItem={({ item }) => ( 
+
+            <Listagem data={item} deleteItem={handleDelete} 
+
+                editItem={handleEdit} /> 
+        )} 
+    /> 
+
+) 
 
 } 
 
-  
+        </View>
 
-const styles = StyleSheet.create({ 
+    );
 
-    container: { 
+}
 
-        flex: 1, 
 
-        margin: 10, 
 
-    }, 
 
-    input: { 
 
-        borderWidth: 1, 
 
-        borderColor: '#121212', 
 
-        height: 40, 
+const styles = StyleSheet.create({
 
-        fontSize: 13, 
+    container: {
 
-        borderRadius: 8 
+        flex: 1,
 
-    }, 
+        margin: 10,
+    },
 
-    separator: { 
+    input: {
 
-        marginVertical: 5, 
+        borderWidth: 1,
 
-    }, 
+        borderColor: '#121212',
 
-    button: { 
+        height: 40,
 
-        flexDirection: 'row', 
+        fontSize: 13,
 
-        alignItems: 'center', 
+        borderRadius: 8
+    },
 
-        backgroundColor: '#3ea6f2', 
+    separator: {
 
-        borderWidth: 0.5, 
+        marginVertical: 5,
 
-        borderColor: '#fff', 
+    },
 
-        height: 40, 
+    button: {
 
-        borderRadius: 5, 
+        flexDirection: 'row',
 
-        margin: 5, 
+        alignItems: 'center',
 
-    }, 
+        backgroundColor: '#3ea6f2',
 
-    buttonImageIconStyle: { 
+        borderWidth: 0.5,
 
-        padding: 10, 
+        borderColor: '#fff',
 
-        margin: 5, 
+        height: 40,
 
-        height: 25, 
+        borderRadius: 5,
 
-        width: 25, 
+        margin: 5,
 
-        resizeMode: 'stretch', 
+    },
 
-    }, 
+    buttonImageIconStyle: {
 
-    buttonTextStyle: { 
+        padding: 10,
 
-        color: '#fff', 
+        margin: 5,
 
-        marginBottom: 4, 
+        height: 25,
 
-        marginLeft: 100, 
+        width: 25,
 
-        fontSize: 20 
+        resizeMode: 'stretch',
 
-    }, 
+    },
 
-    buttonIconSeparatorStyle: { 
+    buttonTextStyle: {
 
-        backgroundColor: '#fff', 
+        color: '#fff',
 
-        width: 1, 
+        marginBottom: 4,
 
-        height: 20, 
+        marginLeft: 100,
 
-    }, 
+        fontSize: 20
 
-    listar: { 
+    },
 
-        fontSize: 20, 
+    buttonIconSeparatorStyle: {
 
-        textAlign: 'center' 
+        backgroundColor: '#fff',
 
-    } 
+        width: 1,
+
+        height: 20,
+
+    },
+
+    listar: {
+
+        fontSize: 20,
+
+        textAlign: 'center'
+
+    }
 
 }); 

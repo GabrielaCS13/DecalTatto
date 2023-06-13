@@ -20,18 +20,11 @@ const Separator = () => {
 
 export default function GerenciarPerfil() {
 
-
-
     const [nome, setNome] = useState('');
-
     const [datanascimento, setDatanascimento] = useState('');
-
     const [telefone, setTelefone] = useState('');
-
     const [cidade, setCidade] = useState('');
-
     const [endereco, setEndereco] = useState('');
-    
     const [key, setKey] = useState('');  
 
 
